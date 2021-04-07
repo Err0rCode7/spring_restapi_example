@@ -45,7 +45,7 @@ class SubjectServiceTest {
         // Given
         // 서브젝트가 6개 존재 -> 풀이 6개 존재
         // 이번주 libft 대한 예약이 2개만 존재할 때
-        List<Subject> subjects = subjectRepository.findAll();
+       /* List<Subject> subjects = subjectRepository.findAll();
 
         for (Subject subject : subjects) {
             LocalDateTime createdAt = LocalDateTime.of(2021, 4, 5, 0, 0, 0);
@@ -60,27 +60,26 @@ class SubjectServiceTest {
                 reservationRepository.save(reservation1);
                 reservationRepository.save(reservation2);
             }
-        }
+        }*/
 
         // When
         // WeeklySubjectDto를 구했을 때
-        Optional<List<WeeklySubjectDto>> weeklySubjectsByDateTime = subjectService.getWeeklySubjectsByDateTime(LocalDateTime.now());
+        List<WeeklySubjectDto> weeklySubjectDtos = subjectService.getWeeklySubjectsByDateTime(LocalDateTime.now());
 
         // Then
         // libft 의 pool count가 2이고 나머지 count는 0이여야함.
-        if (weeklySubjectsByDateTime.isPresent()) {
-            weeklySubjectsByDateTime.get()
-                    .stream()
-                    .forEach((weeklySubjectDto -> {
-                        System.out.println(
-                                "Name = " + weeklySubjectDto.getName()
-                                + "PoolCount" + weeklySubjectDto.getPoolCount());
-                        if (weeklySubjectDto.getName().equals("libft")) {
-                            assertThat(weeklySubjectDto.getPoolCount()).isEqualTo(2);
-                        } else {
-                            assertThat(weeklySubjectDto.getPoolCount()).isEqualTo(0);
-                        }
-                    }));
-        }
+            weeklySubjectDtos
+                .stream()
+                .forEach((weeklySubjectDto -> {
+                    System.out.println(
+                            "Name = " + weeklySubjectDto.getName()
+                            + "PoolCount" + weeklySubjectDto.getPoolCount());
+                    if (weeklySubjectDto.getName().equals("libft")) {
+                        assertThat(weeklySubjectDto.getPoolCount()).isEqualTo(2);
+                    } else {
+                        assertThat(weeklySubjectDto.getPoolCount()).isEqualTo(0);
+                    }
+                }));
+
     }
 }
