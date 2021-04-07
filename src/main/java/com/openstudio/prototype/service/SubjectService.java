@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -52,21 +54,34 @@ public class SubjectService {
         return subjectRepository.findByName(subjectName);
     }
 
-    public Optional<List<WeeklySubjectDto>> getWeeklySubjectsByDateTime(LocalDateTime dateTime) {
+    public List<WeeklySubjectDto> getWeeklySubjectsByDateTime(LocalDateTime dateTime) {
+        // select p from Pool p join fetch p.subject
         Optional<List<Pool>> poolList = poolRepository.findByDateTime(dateTime);
-        List<WeeklySubjectDto> result = new ArrayList<WeeklySubjectDto>();
+
         if (poolList.isPresent()) {
-            poolList.get()
-                .stream()
-                .forEach((pool -> {
-                    Long rsvCount = reservationRepository.countByPoolId(pool.getId());
-                    Subject subject = pool.getSubject();
-                    WeeklySubjectDto wsd = new WeeklySubjectDto(subject, rsvCount);
-                    result.add(wsd);
-                }));
-            return Optional.of(result);
-        } else {
-            return Optional.empty();
-        }
+            List<Pool> pools = poolList.get();
+            return pools.stream().map(
+                    pool -> {
+                        System.out.println("pool.getId() = " + pool.getId());
+                        return new WeeklySubjectDto(pool.getSubject(), (long) pool.getReservations().size());
+                    }
+            ).collect(Collectors.toList());
+        } else
+            return null;
+
+        //poolList id list -> groupby poolid, id
+//        List<WeeklySubjectDto> result = new ArrayList<WeeklySubjectDto>();
+//        if (poolList.isPresent()) {
+//            poolList.get()
+//                .stream()
+//                .forEach((pool -> {
+//                    Long rsvCount = reservationRepository.countByPoolId(pool.getId());
+//                    WeeklySubjectDto wsd = new WeeklySubjectDto(pool.getSubject(), rsvCount);
+//                    result.add(wsd);
+//                }));
+//            return Optional.of(result);
+//        } else {
+//            return Optional.empty();
+//        }
     }
 }

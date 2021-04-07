@@ -12,6 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface PoolRepository extends JpaRepository<Pool, Long> {
-    @Query("select p from Pool p where p.createdAt < :#{#currentTime} and p.closedAt > :#{#currentTime}")
+    @Query("select distinct p from Pool p" +
+            " join fetch p.subject" +
+            " where p.createdAt < :#{#currentTime} and p.closedAt > :#{#currentTime}")
     Optional<List<Pool>> findByDateTime(@Param("currentTime") LocalDateTime dateTime);
 }

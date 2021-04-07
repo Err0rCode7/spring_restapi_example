@@ -88,21 +88,26 @@ public class SubjectController {
 
     @GetMapping("subject/a-week")
     public ResponseEntity<ListApiResponse<WeeklySubjectDto>> getWeeklySubjects() {
-        Optional<List<WeeklySubjectDto>> weeklySubjectsByDateTime = subjectService
+        List<WeeklySubjectDto> weeklySubjectsByDateTime = subjectService
                 .getWeeklySubjectsByDateTime(LocalDateTime.now());
+        return ResponseEntity.ok(
+                new ListApiResponse<>(
+                        "정상적으로 서브젝트들을 반환했습니다.",
+                        weeklySubjectsByDateTime
+                ));
 
-        if (weeklySubjectsByDateTime.isPresent()) {
-            return ResponseEntity.ok(
-                    new ListApiResponse<>(
-                            "정상적으로 서브젝트들을 반환했습니다.",
-                            weeklySubjectsByDateTime.get()
-                    ));
-        } else {
-            return ResponseEntity.ok(
-                    new ListApiResponse<>(
-                            "널 반환",
-                            new ArrayList<WeeklySubjectDto>()
-                    ));
-        }
+//        if (weeklySubjectsByDateTime.isPresent()) {
+//            return ResponseEntity.ok(
+//                    new ListApiResponse<>(
+//                            "정상적으로 서브젝트들을 반환했습니다.",
+//                            weeklySubjectsByDateTime.get()
+//                    ));
+//        } else {
+//            return ResponseEntity.ok(
+//                    new ListApiResponse<>(
+//                            "널 반환",
+//                            new ArrayList<WeeklySubjectDto>()
+//                    ));
+//        }
     }
 }

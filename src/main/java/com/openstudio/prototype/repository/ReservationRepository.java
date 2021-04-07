@@ -8,5 +8,4 @@ import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     Optional<List<Reservation>> findByPoolId(Long poolId);
-    Long countByPoolId(Long poolId);
 }

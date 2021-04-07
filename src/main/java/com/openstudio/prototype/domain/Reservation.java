@@ -2,11 +2,13 @@ package com.openstudio.prototype.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Reservation {
     @Id
     @GeneratedValue
@@ -20,6 +22,8 @@ public class Reservation {
     @JoinColumn(name = "pool_id")
     @JsonIgnore
     private Pool pool;
+
+
 
     public Reservation(Member member, Pool pool) {
         this.member = member;
